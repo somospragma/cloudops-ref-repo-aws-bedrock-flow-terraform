@@ -43,7 +43,7 @@ variable "kms_key_arn" {
 
 variable "flow_nodes" {
   description = "Dynamic flow nodes configuration"
-  type = map(any)
+  type = any
 
   validation {
     condition = alltrue([
