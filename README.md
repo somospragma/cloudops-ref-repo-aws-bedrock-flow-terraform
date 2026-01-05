@@ -470,3 +470,4 @@ module "bedrock_flow" {
 - **Timeout en Lambda**: Ajustar configuración de timeout
 - **Errores de conexión**: Validar nombres de nodos y outputs/inputs
 - **Problemas de permisos**: Revisar políticas IAM del rol de ejecución
+# Pipeline cache refresh
