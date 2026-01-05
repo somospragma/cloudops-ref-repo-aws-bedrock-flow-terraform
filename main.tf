@@ -91,7 +91,7 @@ resource "aws_bedrockagent_flow" "main" {
           content {
             condition {
               dynamic "condition" {
-                for_each = node.value.conditions
+                for_each = try(node.value.conditions, [])
                 content {
                   name       = condition.value.name
                   expression = try(condition.value.expression, null)
@@ -103,7 +103,7 @@ resource "aws_bedrockagent_flow" "main" {
 
         # Dynamic Inputs - Use inputs list for all nodes
         dynamic "input" {
-          for_each = length(node.value.inputs) > 0 ? node.value.inputs : (
+          for_each = try(length(node.value.inputs), 0) > 0 ? node.value.inputs : (
             node.value.type == "Output" ? [{
               name       = "document"
               type       = "String"
