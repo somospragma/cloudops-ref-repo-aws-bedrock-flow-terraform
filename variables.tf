@@ -57,11 +57,8 @@ variable "flow_nodes" {
     # For Lambda nodes
     lambda_arn = optional(string)
 
-    # For Condition nodes
-    conditions = optional(list(object({
-      name       = string
-      expression = string
-    })), [])
+    # For Condition nodes  
+    conditions = optional(list(any), [])
 
     # Common properties
     output_name = optional(string, "output")
