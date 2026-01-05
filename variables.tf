@@ -43,34 +43,7 @@ variable "kms_key_arn" {
 
 variable "flow_nodes" {
   description = "Dynamic flow nodes configuration"
-  type = map(object({
-    type = string # "Input", "Output", "Prompt", "LambdaFunction"
-
-    # For Prompt nodes
-    template      = optional(string)
-    template_file = optional(string)
-    model_id      = optional(string)
-    max_tokens    = optional(number, 1000)
-    temperature   = optional(number, 0.7)
-    top_p         = optional(number, 0.9)
-
-    # For Lambda nodes
-    lambda_arn = optional(string)
-
-    # For Condition nodes  
-    conditions = optional(list(any), [])
-
-    # Common properties
-    output_name = optional(string, "output")
-    output_type = optional(string, "String")
-
-    # Multiple inputs support
-    inputs = optional(list(object({
-      name       = string
-      type       = string
-      expression = string
-    })), [])
-  }))
+  type = map(any)
 
   validation {
     condition = alltrue([
