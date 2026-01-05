@@ -89,9 +89,20 @@ variable "flow_connections" {
     name          = string
     source        = string
     target        = string
-    source_output = string
-    target_input  = string
+    type          = optional(string, "Data")  # "Data" or "Conditional"
+    source_output = optional(string)
+    target_input  = optional(string)
+    condition     = optional(string)  # For Conditional type
   }))
+
+  validation {
+    condition = alltrue([
+      for conn in var.flow_connections :
+      conn.type == "Data" ? (conn.source_output != null && conn.target_input != null) :
+      conn.type == "Conditional" ? conn.condition != null : false
+    ])
+    error_message = "Data connections require source_output and target_input. Conditional connections require condition."
+  }
 }
 
 variable "additional_tags" {

@@ -138,7 +138,7 @@ resource "aws_bedrockagent_flow" "main" {
           for_each = node.value.type == "Condition" ? concat(
             [for cond in node.value.conditions : cond.name],
             ["default"]
-          ) : (
+            ) : (
             contains(["Input", "Prompt", "LambdaFunction", "Collector"], node.value.type) ? [1] : []
           )
           content {
@@ -161,12 +161,24 @@ resource "aws_bedrockagent_flow" "main" {
         name   = connection.value.name
         source = connection.value.source
         target = connection.value.target
-        type   = "Data"
+        type   = coalesce(connection.value.type, "Data")
 
-        configuration {
-          data {
-            source_output = connection.value.source_output
-            target_input  = connection.value.target_input
+        dynamic "configuration" {
+          for_each = coalesce(connection.value.type, "Data") == "Data" ? [1] : []
+          content {
+            data {
+              source_output = connection.value.source_output
+              target_input  = connection.value.target_input
+            }
+          }
+        }
+
+        dynamic "configuration" {
+          for_each = coalesce(connection.value.type, "Data") == "Conditional" ? [1] : []
+          content {
+            conditional {
+              condition = connection.value.condition
+            }
           }
         }
       }
